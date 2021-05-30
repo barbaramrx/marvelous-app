@@ -3,7 +3,7 @@ package com.brb.marvelousapp.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "char", schema = "marvelous")
@@ -15,15 +15,11 @@ public class Char {
 
     @Id
     @Column(name = "char_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long char_id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "bio")
-    private String bio;
-
     @ManyToMany(mappedBy = "favChars")
-    Set<User> users;
+    List<User> users;
 }

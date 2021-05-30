@@ -7,12 +7,11 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class ComicDTO {
 
     private Long id;
-    private String email;
     private String name;
-    private String password;
-    private String profile;
+    private String description;
+    private Long user_id;
 
 }

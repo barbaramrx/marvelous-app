@@ -7,12 +7,9 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class CharDTO {
 
     private Long id;
-    private String email;
     private String name;
-    private String password;
-    private String profile;
-
+    private Long user_id;
 }

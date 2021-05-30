@@ -8,6 +8,12 @@ public interface UserService {
 
     User saveUser(User user);
 
+    User updateUser(User user);
+
+    User getLoggedUser(Long id);
+
+    User getUserById(Long id);
+
     void validateEmail(String email);
 
 }

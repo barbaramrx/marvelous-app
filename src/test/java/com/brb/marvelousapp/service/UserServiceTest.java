@@ -6,10 +6,8 @@ import com.brb.marvelousapp.model.entity.User;
 import com.brb.marvelousapp.model.repository.UserRepository;
 import com.brb.marvelousapp.service.impl.UserServiceImpl;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -48,17 +46,6 @@ public class UserServiceTest {
         Assertions.assertThat(savedUser.getEmail()).isEqualTo("email@email.com");
         Assertions.assertThat(savedUser.getPassword()).isEqualTo("password");
     }
-
-//    @Test
-//    public void emailAlreadyExistsError() {
-//        String email = "email@email.com";
-//        User user = User.builder().email(email).build();
-//        Mockito.doThrow(MarvelousException.class).when(service).validateEmail(email);
-//
-//        service.saveUser(user);
-//
-//        Mockito.verify(repository, Mockito.never()).save(user);
-//    }
 
     @Test
     public void successfullyAuthUser() {

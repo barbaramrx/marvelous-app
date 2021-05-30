@@ -1,11 +1,9 @@
 package com.brb.marvelousapp.model.entity;
 
 import lombok.*;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "user", schema = "marvelous")
@@ -29,19 +27,21 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "account_date")
-    @Convert(converter = Jsr310JpaConverters.LocalDateConverter.class)
-    private LocalDate accountDate;
+    @Column(name = "profile")
+    private String profile;
 
     @ManyToMany
     @JoinTable(name = "user_comic",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "comic_id"))
-    Set<Comic> favComics;
+            inverseJoinColumns = @JoinColumn(name = "comic_id"),
+            schema = "marvelous")
+    List<Comic> favComics;
 
     @ManyToMany
     @JoinTable(name = "user_char",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "char_id"))
-    Set<Char> favChars;
+            inverseJoinColumns = @JoinColumn(name = "char_id"),
+            schema = "marvelous")
+    List<Char> favChars;
+
 }
