@@ -6,6 +6,8 @@ public interface CharService {
 
     Char saveChar(Char character);
 
-    Char checkIfFav(Long id);
+    Char checkIfExists(Char character);
+
+    Char getCharById(Long id);
 
 }

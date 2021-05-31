@@ -1,5 +1,7 @@
 package com.brb.marvelousapp.service;
 
+import com.brb.marvelousapp.model.entity.Char;
+import com.brb.marvelousapp.model.entity.Comic;
 import com.brb.marvelousapp.model.entity.User;
 
 public interface UserService {
@@ -10,10 +12,14 @@ public interface UserService {
 
     User updateUser(User user);
 
-    User getLoggedUser(Long id);
+    User getLoggedUser(Integer id);
 
-    User getUserById(Long id);
+    User getUserById(Integer id);
 
     void validateEmail(String email);
+
+    User deleteComic(Integer userId, Comic comic);
+
+    User deleteCharacter(Integer userId, Char character);
 
 }

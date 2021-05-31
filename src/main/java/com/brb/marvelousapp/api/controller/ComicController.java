@@ -1,6 +1,7 @@
 package com.brb.marvelousapp.api.controller;
 
 import com.brb.marvelousapp.api.dto.ComicDTO;
+import com.brb.marvelousapp.api.dto.DeleteDTO;
 import com.brb.marvelousapp.model.entity.Comic;
 import com.brb.marvelousapp.model.entity.User;
 import com.brb.marvelousapp.model.repository.ComicRepository;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/comic")
 public class ComicController {
@@ -28,27 +30,28 @@ public class ComicController {
     }
 
     @PostMapping("{id}/save")
-    public ResponseEntity save(@PathVariable("id")Long id, @RequestBody ComicDTO dto) {
+    public ResponseEntity save(@PathVariable("id")Integer id, @RequestBody ComicDTO dto) {
+
         Comic comic = Comic.builder()
                 .id(dto.getId())
                 .name(dto.getName())
                 .build();
 
+        service.checkIfExists(comic);
+
         Optional<User> user = Optional.ofNullable(userService.getUserById(id));
         user.get().getFavComics().addAll(Arrays.asList(comic));
+        User favdComic = userService.updateUser(user.get());
 
         try {
-            Comic savedComic = service.saveComic(comic);
-            userService.updateUser(user.get());
-
-            return new ResponseEntity(savedComic, HttpStatus.CREATED);
+            return new ResponseEntity(favdComic, HttpStatus.CREATED);
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @GetMapping("{id}/favComics")
-    public ResponseEntity getFavComics(@PathVariable("id") Long id) {
+    public ResponseEntity getFavComics(@PathVariable("id") Integer id) {
         Optional<User> user = Optional.ofNullable(userService.getLoggedUser(id));
 
         try {
@@ -56,5 +59,19 @@ public class ComicController {
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @DeleteMapping
+    public ResponseEntity deleteComicFav(@RequestBody DeleteDTO dto) {
+
+        Comic getComic = service.getComicById(dto.getId());
+
+        try {
+            userService.deleteComic(dto.getIdUser(), getComic);
+            return ResponseEntity.ok(HttpStatus.GONE);
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 }

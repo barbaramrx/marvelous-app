@@ -2,6 +2,7 @@ package com.brb.marvelousapp.service.impl;
 
 import com.brb.marvelousapp.exception.FavError;
 import com.brb.marvelousapp.exception.MarvelousException;
+import com.brb.marvelousapp.model.entity.Comic;
 import com.brb.marvelousapp.model.repository.CharRepository;
 import com.brb.marvelousapp.service.CharService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +38,27 @@ public class CharServiceImpl implements CharService {
     }
 
     @Override
-    public Char checkIfFav(Long id) {
-        Optional<Char> character = repository.findById(id);
+    public Char checkIfExists(Char character) {
+        boolean exists = repository.existsById(character.getId());
 
-        if (!character.isPresent()) {
-            throw new FavError("O character não está na lista dos favoritos");
+        if (!exists) {
+            return repository.save(character);
+        } else {
+            return character;
         }
+    }
 
-        return character.get();
+    @Override
+    public Char getCharById(Long id) {
+
+        boolean exists = repository.existsById(id);
+
+        if (exists) {
+            Char character = repository.getById(id);
+            return character;
+        } else {
+            throw new MarvelousException("O character não existe.");
+        }
     }
 
 }

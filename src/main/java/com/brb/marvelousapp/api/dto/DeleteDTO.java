@@ -7,9 +7,10 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ComicDTO {
+public class DeleteDTO {
 
     private Long id;
     private String name;
+    private Integer idUser;
 
 }

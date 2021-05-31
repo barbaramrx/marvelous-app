@@ -6,4 +6,8 @@ public interface ComicService {
 
     Comic saveComic(Comic comic);
 
+    Comic checkIfExists(Comic comic);
+
+    Comic getComicById(Long id);
+
 }
