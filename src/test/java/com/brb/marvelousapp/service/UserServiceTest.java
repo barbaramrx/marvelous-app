@@ -30,7 +30,7 @@ public class UserServiceTest {
     public void successfullySaveUser() {
         Mockito.doNothing().when(service).validateEmail(Mockito.anyString());
         User user = User.builder()
-                .userId(1L)
+                .userId(1)
                 .name("name")
                 .email("email@email.com")
                 .password("password")
@@ -52,7 +52,7 @@ public class UserServiceTest {
         String email = "email@email.com";
         String password = "password";
 
-        User user = User.builder().email(email).password(password).userId(1L).build();
+        User user = User.builder().email(email).password(password).userId(1).build();
         Mockito.when(repository.findByEmail(email)).thenReturn(Optional.of(user));
 
         User result = service.auth(email, password);

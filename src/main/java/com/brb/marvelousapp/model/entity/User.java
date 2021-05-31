@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user", schema = "marvelous")
@@ -18,7 +19,7 @@ public class User {
     @Id
     @Column(name = "user_id", insertable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Integer userId;
 
     @Column(name = "name")
     private String name;
@@ -32,18 +33,18 @@ public class User {
     @Column(name = "profile")
     private String profile;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "user_comic",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "comic_id"),
             schema = "marvelous")
-    List<Comic> favComics;
+    Set<Comic> favComics;
 
     @ManyToMany
     @JoinTable(name = "user_char",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "char_id"),
             schema = "marvelous")
-    List<Char> favChars;
+    Set<Char> favChars;
 
 }

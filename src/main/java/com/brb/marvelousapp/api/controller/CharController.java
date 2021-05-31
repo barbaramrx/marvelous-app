@@ -11,10 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
 import java.util.Arrays;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/char")
 public class CharController {
@@ -31,27 +31,28 @@ public class CharController {
     }
 
     @PostMapping("{id}/save")
-    public ResponseEntity save(@PathVariable("id")Long id, @RequestBody CharDTO dto) {
+    public ResponseEntity save(@PathVariable("id")Integer id, @RequestBody CharDTO dto) {
+
         Char character = Char.builder()
                 .id(dto.getId())
                 .name(dto.getName())
                 .build();
 
+        service.checkIfExists(character);
+
         Optional<User> user = Optional.ofNullable(userService.getUserById(id));
         user.get().getFavChars().addAll(Arrays.asList(character));
+        User favdChar = userService.updateUser(user.get());
 
         try {
-            Char savedChar = service.saveChar(character);
-            userService.updateUser(user.get());
-
-            return new ResponseEntity(savedChar, HttpStatus.CREATED);
+            return new ResponseEntity(favdChar, HttpStatus.CREATED);
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @GetMapping("/{id}/favCharacters")
-    public ResponseEntity checkIfFav(@PathVariable("id") Long id) {
+    public ResponseEntity checkIfFav(@PathVariable("id") Integer id) {
         Optional<User> user = Optional.ofNullable(userService.getLoggedUser(id));
 
         try {
@@ -59,6 +60,20 @@ public class CharController {
         } catch(FavError e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @DeleteMapping("{idUser}/delete")
+    public ResponseEntity deleteComicFav(@PathVariable("idUser") Integer idUser, @RequestBody CharDTO dto) {
+
+        Char getChar = service.getCharById(dto.getId());
+
+        try {
+            userService.deleteCharacter(idUser, getChar);
+            return ResponseEntity.ok(HttpStatus.GONE);
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
 }

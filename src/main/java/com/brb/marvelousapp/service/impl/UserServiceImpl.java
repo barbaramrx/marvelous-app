@@ -3,7 +3,11 @@ package com.brb.marvelousapp.service.impl;
 import com.brb.marvelousapp.exception.AuthError;
 import com.brb.marvelousapp.exception.GetLoggedUserError;
 import com.brb.marvelousapp.exception.MarvelousException;
+import com.brb.marvelousapp.model.entity.Char;
+import com.brb.marvelousapp.model.entity.Comic;
 import com.brb.marvelousapp.model.entity.User;
+import com.brb.marvelousapp.model.repository.UserCharRepository;
+import com.brb.marvelousapp.model.repository.UserComicRepository;
 import com.brb.marvelousapp.model.repository.UserRepository;
 import com.brb.marvelousapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +21,16 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository repository;
 
+    private UserComicRepository userComicRepository;
+
+    private UserCharRepository userCharRepository;
+
     @Autowired
-    public UserServiceImpl(UserRepository repository) {
+    public UserServiceImpl(UserRepository repository, UserComicRepository userComicRepository, UserCharRepository userCharRepository) {
         super();
         this.repository = repository;
+        this.userComicRepository = userComicRepository;
+        this.userCharRepository = userCharRepository;
     }
 
     @Override
@@ -54,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User getLoggedUser(Long id) {
+    public User getLoggedUser(Integer id) {
         boolean exists = repository.existsById(id);
 
         if (exists) {
@@ -75,7 +85,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
+    public User getUserById(Integer id) {
         Optional<User> user = repository.findById(id);
 
         if (!user.isPresent()) {
@@ -83,5 +93,37 @@ public class UserServiceImpl implements UserService {
         }
 
         return user.get();
+    }
+
+    @Override
+    @Transactional
+    public User deleteComic(Integer userId, Comic comic) {
+        boolean exists = userComicRepository.existsUsersByUserIdAndFavComics(userId, comic);
+
+        if (exists) {
+            User user = this.getUserById(userId);
+            user.getFavComics().remove(comic);
+
+            User freshUser = repository.save(user);
+            return freshUser;
+        } else {
+            throw new MarvelousException("Esta comic não pertence ao user!");
+        }
+    }
+
+    @Override
+    @Transactional
+    public User deleteCharacter(Integer userId, Char character) {
+        boolean exists = userCharRepository.existsUsersByUserIdAndFavChars(userId, character);
+
+        if (exists) {
+            User user = this.getUserById(userId);
+            user.getFavChars().remove(character);
+
+            User freshUser = repository.save(user);
+            return freshUser;
+        } else {
+            throw new MarvelousException("Este character não pertence ao user!");
+        }
     }
 }

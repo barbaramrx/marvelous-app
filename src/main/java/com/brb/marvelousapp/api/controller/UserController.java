@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -57,11 +58,12 @@ public class UserController {
     }
 
     @PutMapping("{id}/update")
-    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody UserDTO dto) {
+    public ResponseEntity update(@PathVariable("id") int id, @RequestBody UserDTO dto) {
         User updatedUser = service.getUserById(id);
         updatedUser.setName(dto.getName());
         updatedUser.setEmail(dto.getEmail());
         updatedUser.setPassword(dto.getPassword());
+        updatedUser.setProfile(dto.getProfile());
 
         try {
             User savedUser = service.updateUser(updatedUser);
@@ -72,7 +74,7 @@ public class UserController {
     }
 
     @GetMapping("{id}/logged")
-    public ResponseEntity getLoggedUser(@PathVariable("id") Long id) {
+    public ResponseEntity getLoggedUser(@PathVariable("id") int id) {
         Optional<User> user = Optional.ofNullable(service.getLoggedUser(id));
 
         try {
@@ -81,4 +83,6 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
 }
