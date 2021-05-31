@@ -12,6 +12,5 @@ public class ComicDTO {
     private Long id;
     private String name;
     private String description;
-    private Long user_id;
 
 }

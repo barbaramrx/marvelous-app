@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.ws.Response;
+import java.util.Arrays;
 import java.util.Optional;
 
 @RestController
@@ -29,15 +30,15 @@ public class CharController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity save(@RequestBody CharDTO dto) {
+    @PostMapping("{id}/save")
+    public ResponseEntity save(@PathVariable("id")Long id, @RequestBody CharDTO dto) {
         Char character = Char.builder()
                 .id(dto.getId())
                 .name(dto.getName())
                 .build();
 
-        Optional<User> user = Optional.ofNullable(userService.getUserById(dto.getUser_id()));
-        user.get().getFavChars().add(character);
+        Optional<User> user = Optional.ofNullable(userService.getUserById(id));
+        user.get().getFavChars().addAll(Arrays.asList(character));
 
         try {
             Char savedChar = service.saveChar(character);
@@ -49,11 +50,12 @@ public class CharController {
         }
     }
 
-    @PostMapping("/fav/{id}")
+    @GetMapping("/{id}/favCharacters")
     public ResponseEntity checkIfFav(@PathVariable("id") Long id) {
+        Optional<User> user = Optional.ofNullable(userService.getLoggedUser(id));
+
         try {
-            Char favChar = service.checkIfFav(id);
-            return ResponseEntity.ok(favChar);
+            return ResponseEntity.ok(user.get().getFavChars());
         } catch(FavError e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

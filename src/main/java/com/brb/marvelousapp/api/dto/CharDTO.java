@@ -11,5 +11,4 @@ public class CharDTO {
 
     private Long id;
     private String name;
-    private Long user_id;
 }

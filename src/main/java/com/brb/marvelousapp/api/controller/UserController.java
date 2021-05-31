@@ -26,8 +26,13 @@ public class UserController {
 
     @PostMapping("/auth")
     public ResponseEntity auth(@RequestBody UserDTO dto) {
+        User user = User.builder()
+                .email(dto.getEmail())
+                .password(dto.getPassword())
+                .build();
+
         try {
-            User authUser = service.auth(dto.getEmail(), dto.getPassword());
+            User authUser = service.auth(user.getEmail(), user.getPassword());
             return ResponseEntity.ok(authUser);
         } catch (AuthError e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -51,9 +56,9 @@ public class UserController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity update(@RequestBody UserDTO dto) {
-        User updatedUser = service.getUserById(dto.getId());
+    @PutMapping("{id}/update")
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody UserDTO dto) {
+        User updatedUser = service.getUserById(id);
         updatedUser.setName(dto.getName());
         updatedUser.setEmail(dto.getEmail());
         updatedUser.setPassword(dto.getPassword());
@@ -76,5 +81,4 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
 }

@@ -26,7 +26,7 @@ public class ComicServiceImpl implements ComicService {
         Comic checkComic = comic;
         boolean exists = repository.existsById(checkComic.getId());
 
-        if (exists) {
+        if (!exists) {
             throw new MarvelousException("Esta comic já foi inserida");
         }
 

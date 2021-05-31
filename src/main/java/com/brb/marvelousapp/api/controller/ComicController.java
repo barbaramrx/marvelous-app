@@ -1,21 +1,16 @@
 package com.brb.marvelousapp.api.controller;
 
 import com.brb.marvelousapp.api.dto.ComicDTO;
-import com.brb.marvelousapp.exception.GetLoggedUserError;
 import com.brb.marvelousapp.model.entity.Comic;
 import com.brb.marvelousapp.model.entity.User;
 import com.brb.marvelousapp.model.repository.ComicRepository;
-import com.brb.marvelousapp.model.repository.UserRepository;
 import com.brb.marvelousapp.service.ComicService;
 import com.brb.marvelousapp.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/comic")
@@ -32,16 +27,15 @@ public class ComicController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity save(@RequestBody ComicDTO dto) {
-
+    @PostMapping("{id}/save")
+    public ResponseEntity save(@PathVariable("id")Long id, @RequestBody ComicDTO dto) {
         Comic comic = Comic.builder()
                 .id(dto.getId())
                 .name(dto.getName())
                 .build();
 
-        Optional<User> user = Optional.ofNullable(userService.getUserById(dto.getUser_id()));
-        user.get().getFavComics().add(comic);
+        Optional<User> user = Optional.ofNullable(userService.getUserById(id));
+        user.get().getFavComics().addAll(Arrays.asList(comic));
 
         try {
             Comic savedComic = service.saveComic(comic);
@@ -53,15 +47,14 @@ public class ComicController {
         }
     }
 
-    @PostMapping("/fav/{id}")
-    public ResponseEntity checkIfFav(@PathVariable("id") Long id) {
-        boolean exists = repository.existsById(id);
+    @GetMapping("{id}/favComics")
+    public ResponseEntity getFavComics(@PathVariable("id") Long id) {
+        Optional<User> user = Optional.ofNullable(userService.getLoggedUser(id));
 
         try {
-            return ResponseEntity.ok(HttpStatus.FOUND);
-        } catch(GetLoggedUserError e) {
+            return ResponseEntity.ok(user.get().getFavComics());
+        } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
 }

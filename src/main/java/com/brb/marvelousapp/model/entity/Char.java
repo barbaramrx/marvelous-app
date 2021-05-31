@@ -20,6 +20,4 @@ public class Char {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "favChars")
-    List<User> users;
 }

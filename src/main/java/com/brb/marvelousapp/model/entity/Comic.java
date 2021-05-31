@@ -1,5 +1,6 @@
 package com.brb.marvelousapp.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,6 +21,8 @@ public class Comic {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "favComics")
-    List<User> users;
+//    @ManyToMany(mappedBy = "favComics",
+//            fetch = FetchType.LAZY)
+//    @JsonIgnoreProperties("users")
+//    List<User> users;
 }
