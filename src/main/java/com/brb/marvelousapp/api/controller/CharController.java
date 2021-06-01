@@ -62,10 +62,10 @@ public class CharController {
         }
     }
 
-    @DeleteMapping("{idUser}/delete")
-    public ResponseEntity deleteComicFav(@PathVariable("idUser") Integer idUser, @RequestBody CharDTO dto) {
+    @DeleteMapping("{idUser}/{idChar}/delete")
+    public ResponseEntity deleteComicFav(@PathVariable("idUser")Integer idUser, @PathVariable("idChar")Long idChar) {
 
-        Char getChar = service.getCharById(dto.getId());
+        Char getChar = service.getCharById(idChar);
 
         try {
             userService.deleteCharacter(idUser, getChar);
