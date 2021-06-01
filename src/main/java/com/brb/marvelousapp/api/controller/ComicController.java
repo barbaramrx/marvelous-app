@@ -1,7 +1,6 @@
 package com.brb.marvelousapp.api.controller;
 
 import com.brb.marvelousapp.api.dto.ComicDTO;
-import com.brb.marvelousapp.api.dto.DeleteDTO;
 import com.brb.marvelousapp.model.entity.Comic;
 import com.brb.marvelousapp.model.entity.User;
 import com.brb.marvelousapp.model.repository.ComicRepository;
@@ -61,13 +60,13 @@ public class ComicController {
         }
     }
 
-    @DeleteMapping
-    public ResponseEntity deleteComicFav(@RequestBody DeleteDTO dto) {
+    @DeleteMapping("{idUser}/{idComic}/delete")
+    public ResponseEntity deleteComicFav(@PathVariable("idUser")Integer idUser, @PathVariable("idComic")Long idComic) {
 
-        Comic getComic = service.getComicById(dto.getId());
+        Comic getComic = service.getComicById(idComic);
 
         try {
-            userService.deleteComic(dto.getIdUser(), getComic);
+            userService.deleteComic(idUser, getComic);
             return ResponseEntity.ok(HttpStatus.GONE);
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
