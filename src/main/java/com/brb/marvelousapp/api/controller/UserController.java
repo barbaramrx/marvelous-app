@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://the-marvelous-app.herokuapp.com")
 @RestController
 @RequestMapping("/users")
 public class UserController {
