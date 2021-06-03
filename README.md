@@ -1,3 +1,3 @@
 # marvelous-app
 
-back-end for the marvelous (https://github.com/barbaramrx/marvelous) project.
+back-end for [the marvelous project](https://github.com/barbaramrx/marvelous).
